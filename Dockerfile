@@ -11,7 +11,9 @@ WORKDIR /slskd
 COPY bin bin/.
 COPY src/web src/web/.
 
-RUN sh ./bin/build --web-only --version $VERSION
+RUN apk add --no-cache bash
+
+RUN bash ./bin/build --web-only --version $VERSION
 
 # build, test, and publish application binaries
 # note: this needs to be pinned to an amd64 image in order to publish armv7 binaries

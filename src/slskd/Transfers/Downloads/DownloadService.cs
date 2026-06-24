@@ -597,6 +597,14 @@ namespace slskd.Transfers.Downloads
                                     {
                                         Log.Error(ex, "Failed to clean up transfer {Id} after failed download", transferId);
                                     }
+                                    
+                                    EventBus.Raise(new DownloadFileErrorEvent
+                                    {
+                                        Timestamp = DateTime.Now,
+                                        TransferId = transferId,
+                                        Exception = ex,
+                                        Message = ex.Message,
+                                    });
                                 }, cancellationToken: CancellationToken.None); // end downloadTask.Run();
 
                                 Log.Debug("Download Task status for {Filename} from {Username}: {Status}", file.Filename, username, downloadTask.Status);
@@ -622,6 +630,14 @@ namespace slskd.Transfers.Downloads
                                 {
                                     Log.Error(ex, "Failed to clean up transfer {Id} after failed execution: {Message}", transfer.Id, ex.Message);
                                 }
+                                
+                                EventBus.Raise(new DownloadFileErrorEvent
+                                {
+                                    Timestamp = DateTime.Now,
+                                    TransferId = transferId,
+                                    Exception = ex,
+                                    Message = ex.Message,
+                                });
                             }
                             finally
                             {

@@ -1,0 +1,30 @@
+services:
+  slskd:
+    build:
+      dockerfile: ./Dockerfile
+    container_name: music-slskd
+    user: "1000:1000"
+    ports:
+      - "5030:5030"
+      - "5031:5031"
+      - "51300:50300"
+    environment:
+      - SLSKD_SLSK_USERNAME=${SLSKD_USERNAME}
+      - SLSKD_SLSK_PASSWORD=${SLSKD_PASSWORD}
+      - SLSKD_HEADLESS=false
+      - SLSKD_API_KEY=role=Administrator;cidr=0.0.0.0/0,::/0;${SLSKD_SECRET_API_KEY}
+      - SLSKD_REMOTE_FILE_MANAGEMENT=true
+      - SLSKD_UMASK=022
+      - SLSKD_SLSK_LISTEN_PORT=50300
+      - SLSKD_SHARED_DIR=/app/shared
+      - SLSKD_DOWNLOAD_SLOTS=128
+      - SLSKD_SLSK_TRANSFER_BUFFER=262144
+    volumes:
+      - ${SLSKD_DATA_DIR}:/app
+      - ${SLSKD_SHARED_DIR}:/app/shared:ro
+      - ./slskd.yml:/app/slskd.yml:ro
+    restart: unless-stopped
+
+networks:
+  default:
+    name: music-network
