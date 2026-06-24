@@ -661,6 +661,13 @@ namespace slskd.Transfers.Downloads
                             cts.Dispose();
                         }
 
+                        EventBus.Raise(new DownloadFileErrorEvent
+                        {
+                            Timestamp = DateTime.Now,
+                            TransferId = transferId,
+                            Exception = ex,
+                            Message = ex.Message,
+                        });
                         continue;
                     }
                 } // end foreach()
@@ -1556,7 +1563,15 @@ namespace slskd.Transfers.Downloads
                 {
                     Telemetry.Metrics.Transfers.Downloads.Completed.Failed.Inc(1);
                 }, cancellationToken);
-
+                
+                EventBus.Raise(new DownloadFileErrorEvent
+                {
+                    Timestamp = DateTime.Now,
+                    TransferId = transfer.Id,
+                    Exception = ex,
+                    Message = ex.Message,
+                });
+                
                 throw;
             }
             catch (Exception ex)
@@ -1572,7 +1587,15 @@ namespace slskd.Transfers.Downloads
                 {
                     Telemetry.Metrics.Transfers.Downloads.Completed.Failed.Inc(1);
                 }, cancellationToken);
-
+                
+                EventBus.Raise(new DownloadFileErrorEvent
+                {
+                    Timestamp = DateTime.Now,
+                    TransferId = transfer.Id,
+                    Exception = ex,
+                    Message = ex.Message,
+                });
+                
                 throw;
             }
             finally

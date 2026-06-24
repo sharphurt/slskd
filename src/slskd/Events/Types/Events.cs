@@ -51,6 +51,7 @@ public enum EventType
     SoulseekClientConnected = 50,
     SoulseekClientDisconnected = 51,
 
+    DownloadFileError = 100,
     Noop = int.MaxValue,
 }
 
@@ -72,6 +73,15 @@ public sealed record SoulseekClientDisconnectedEvent : Event
 {
     public override EventType Type => EventType.SoulseekClientDisconnected;
     public override int Version { get; } = 0;
+    public required string Message { get; init; }
+    public required Exception Exception { get; init; }
+}
+
+public sealed record DownloadFileErrorEvent : Event
+{
+    public override EventType Type => EventType.DownloadFileError;
+    public override int Version { get; } = 0;
+    public required Guid TransferId { get; init; }
     public required string Message { get; init; }
     public required Exception Exception { get; init; }
 }
